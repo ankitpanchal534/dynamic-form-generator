@@ -73,13 +73,26 @@ const Form = ({ formFields, setFormFields, hideCreate }) => {
           // display: showSnack ? "none" : "block",
         }}
       >
-        <Card style={{ width: "100%", padding: "10px" }}>
+        <Card
+          style={{
+            width: "100%",
+            padding: "10px",
+            boxShadow: "0px 2px 6px lightgray",
+          }}
+        >
           <Typography variant="h4" gutterBottom>
             New Form
           </Typography>
         </Card>
         {formFields.map((field, index) => (
-          <Card style={{ width: "100%", padding: "10px", marginTop: "10px" }}>
+          <Card
+            style={{
+              width: "100%",
+              padding: "10px",
+              marginTop: "10px",
+              boxShadow: "0px 2px 6px lightgray",
+            }}
+          >
             <Field
               key={index}
               field={field}
@@ -89,7 +102,14 @@ const Form = ({ formFields, setFormFields, hideCreate }) => {
             />
           </Card>
         ))}
-        <Card style={{ width: "97%", padding: "20px", marginTop: "15px" }}>
+        <Card
+          style={{
+            width: "97%",
+            padding: "20px",
+            marginTop: "15px",
+            boxShadow: "0px 2px 6px lightgray",
+          }}
+        >
           {hideCreate ? (
             <Button
               type="submit"

@@ -24,6 +24,8 @@ export default function Home() {
   const [formFields, setFormFields] = useState([]);
   // Declare a state variable to store the selected field type
   const [selectedType, setSelectedType] = useState("text");
+
+  const [showJson, setShowJson] = useState(true);
   // Declare an array of field types
   let fieldTypes = [
     "text",
@@ -68,23 +70,16 @@ export default function Home() {
           // justifyContent={"space-between"}
           gap={1}
         >
-          <Grid
-            item
-            container
-            xs={12}
-            lg={4}
-            md={4}
-            sm={12}
-            className={classes.card_css}
-            p={2}
-          >
+          <Grid item container xs={12} lg={4} md={4} sm={12} p={2}>
             <Typography variant="h6">Add New Field</Typography>
             <form
+              className={classes.card_css}
               onSubmit={addField}
               style={{
                 width: "100%",
                 display: "flex",
                 alignItems: "center",
+                padding: "10px",
               }}
             >
               <Grid container gap={2} mt={2}>
@@ -150,13 +145,45 @@ export default function Home() {
             <Grid item container mt={2}>
               <Link href={"/all-forms"}>
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   style={{ textTransform: "capitalize" }}
                   size="small"
+                  color="success"
                 >
                   View All Forms
                 </Button>
               </Link>
+              <Button
+                onClick={() => setShowJson((prev) => !prev)}
+                variant="contained"
+                style={{ textTransform: "capitalize", marginLeft: 10 }}
+                size="small"
+                color="secondary"
+              >
+                {showJson ? "Hide" : "Show"} JSON
+              </Button>
+            </Grid>
+            <Grid item container>
+              {showJson ? (
+                <div style={{ width: "100%", padding: "5px" }}>
+                  <span>JSON output</span>
+                  {/* <pre>
+                    <code> */}
+                  <textarea
+                    style={{ width: "100%", height: "100%" }}
+                    rows={10}
+                    value={JSON.stringify(formFields, null, "  ")}
+                    onChange={(e) => {
+                      // console.log(e.target.value);
+                      // setFormFields(
+                      //   JSON.parse(JSON.stringify(e.target.value) || [])
+                      // );
+                    }}
+                  />
+                  {/* </code>
+                  </pre> */}
+                </div>
+              ) : null}
             </Grid>
           </Grid>
           {/* </Grid> */}
