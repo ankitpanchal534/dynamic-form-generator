@@ -18,14 +18,15 @@ import { Add, PlusOne } from "@mui/icons-material";
 import FormFields from "./FormFields";
 import classes from "./page.module.css";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function Home() {
   // Declare a state variable to store the form fields
   const [formFields, setFormFields] = useState([]);
+  const [formFields1, setFormFields1] = useState([]);
   // Declare a state variable to store the selected field type
   const [selectedType, setSelectedType] = useState("text");
 
-  const [showJson, setShowJson] = useState(true);
   // Declare an array of field types
   let fieldTypes = [
     "text",
@@ -60,16 +61,38 @@ export default function Home() {
     // Reset the selected field type state
     setSelectedType("text");
   };
+  const validateJson = (str) => {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  };
+  const onJsonChange = (e) => {
+    let str = e.target.value.toString();
+    setFormFields1(str);
+  };
+  const handleValidateJson = (e) => {
+    if (validateJson(formFields1)) {
+      setFormFields(JSON.parse(formFields1));
+    } else {
+      alert("invalid json");
+    }
+  };
+  useEffect(() => {
+    setFormFields1(formFields);
+  }, [formFields]);
 
   return (
     <Grid container justifyContent={"center"}>
       <Container maxWidth="lg" style={{ margin: 0, padding: 0 }}>
-        <Grid
-          container
-          alignItems={"flex-start"}
-          // justifyContent={"space-between"}
-          gap={1}
-        >
+        <Grid container alignItems={"flex-start"} gap={1}>
+          <Grid item container justifyContent={"center"}>
+            <Typography variant="h5" color={"Highlight"}>
+              Dynamic Form Builder
+            </Typography>
+          </Grid>
           <Grid item container xs={12} lg={4} md={4} sm={12} p={2}>
             <Typography variant="h6">Add New Field</Typography>
             <form
@@ -153,40 +176,60 @@ export default function Home() {
                   View All Forms
                 </Button>
               </Link>
-              <Button
-                onClick={() => setShowJson((prev) => !prev)}
-                variant="contained"
-                style={{ textTransform: "capitalize", marginLeft: 10 }}
-                size="small"
-                color="secondary"
-              >
-                {showJson ? "Hide" : "Show"} JSON
-              </Button>
             </Grid>
             <Grid item container>
-              {showJson ? (
-                <div style={{ width: "100%", padding: "5px" }}>
-                  <span>JSON output</span>
-                  {/* <pre>
-                    <code> */}
-                  <textarea
-                    style={{ width: "100%", height: "100%" }}
-                    rows={10}
-                    value={JSON.stringify(formFields, null, "  ")}
-                    onChange={(e) => {
-                      // console.log(e.target.value);
-                      // setFormFields(
-                      //   JSON.parse(JSON.stringify(e.target.value) || [])
-                      // );
-                    }}
-                  />
-                  {/* </code>
-                  </pre> */}
+              <div style={{ width: "100%", padding: "5px" }}>
+                <span>JSON output</span>
+                <div
+                  style={{
+                    width: `calc(100%-10px)`,
+                    background: "white",
+                    minHeight: "100px",
+                    padding: "10px",
+                    borderRadius: "12px",
+                  }}
+                >
+                  <pre>
+                    <code>{JSON.stringify(formFields, null, "  ")}</code>
+                  </pre>
                 </div>
-              ) : null}
+
+                <Button
+                  sx={{ marginTop: "10px" }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      JSON.stringify(formFields, null, "  ")
+                    );
+                    Swal.fire({
+                      text: "Copied to clipboard",
+                      icon: "success",
+                    });
+                  }}
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                >
+                  Copy JSON Output
+                </Button>
+              </div>
+              <div style={{ width: "100%", padding: "5px", marginTop: "10px" }}>
+                <span>Import JSON</span>
+                <textarea
+                  style={{ width: "100%", height: "100%" }}
+                  rows={10}
+                  onChange={onJsonChange}
+                />
+                <Button
+                  onClick={handleValidateJson}
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                >
+                  Validate JSON
+                </Button>
+              </div>
             </Grid>
           </Grid>
-          {/* </Grid> */}
           <Grid
             item
             container
@@ -195,7 +238,9 @@ export default function Home() {
             md={7}
             sm={12}
             p={2}
-            // className={classes.card_css}
+            position={"sticky"}
+            top={0}
+            left={10}
           >
             <Form formFields={formFields} setFormFields={setFormFields} />
           </Grid>
